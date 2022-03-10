@@ -2,38 +2,40 @@ package ru.otus.spring.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import ru.otus.spring.domain.Question;
 
 import java.io.IOException;
-import java.util.Scanner;
 
-public class Test {
+@Service
+public class Examination {
 
     @Value("${minPoints}")
     private int minPoints;
     private final Translator translator;
+    private final IOService ioService;
 
     @Autowired
-    public Test(Translator translator) {
+    public Examination(Translator translator, IOService ioService) {
         this.translator = translator;
+        this.ioService = ioService;
     }
 
     public void start() throws IOException {
         int score = 0;
-        System.out.println("Introduce yourself");
-        Scanner scanner = new Scanner(System.in);
-        String fullName = scanner.next();
+        ioService.showMessage("Introduce yourself");
+        String fullName = ioService.getResponse();
 
         for (Question question : translator.parse()) {
-            System.out.println(question.getQuestion());
-            System.out.println(question.getAnswer1() + " | " + question.getAnswer2() +
+            ioService.showMessage(question.getQuestion());
+            ioService.showMessage(question.getAnswer1() + " | " + question.getAnswer2() +
                     " | " + question.getAnswer3() + " | " + question.getAnswer4());
-            System.out.println("Write the most suitable answer: ");
-            String answer = scanner.next();
+            ioService.showMessage("Write the most suitable answer: ");
+            String answer = ioService.getResponse();
             if (answer.toLowerCase().equals(question.getRightAnswer().toLowerCase())) score++;
         }
-        System.out.printf("%s's score: %d\n", fullName, score);
+        ioService.showMessage(fullName + "'s score: " + score);
         String msg = score >= minPoints ? "Passed!" : "Try again.";
-        System.out.println(msg);
+        ioService.showMessage(msg);
     }
 }

@@ -3,11 +3,13 @@ package ru.otus.spring.service;
 import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Service;
 import ru.otus.spring.domain.Question;
 
 import java.io.*;
 import java.util.List;
 
+@Service
 public class CSVTranslator implements Translator {
 
     @Value("${filePath}")
