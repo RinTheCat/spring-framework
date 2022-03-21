@@ -1,0 +1,14 @@
+csv:
+  file-path: /questions
+  file-extension: csv
+
+exam:
+  min-points: 3
+
+project:
+  version: @project.version@
+
+spring:
+  messages:
+    basename: l10n/messages
+    encoding: UTF-8
