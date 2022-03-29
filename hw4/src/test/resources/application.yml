@@ -1,0 +1,19 @@
+csv:
+  file-name: /questions
+  file-extension: csv
+
+exam:
+  min-points: 3
+
+project:
+  version: test-run
+
+spring:
+  messages:
+    basename: l10n/messages
+    encoding: UTF-8
+  main:
+    allow-circular-references: true
+  shell:
+    interactive:
+      enabled: false
