@@ -5,7 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.MessageSource;
-import ru.otus4.spring.config.IOProvider;
+import org.springframework.test.util.ReflectionTestUtils;
+import ru.otus4.spring.config.AppConfig;
 import ru.otus4.spring.service.IOService;
 
 import java.io.ByteArrayOutputStream;
@@ -21,18 +22,18 @@ public class IOServiceTest {
     private static final String LINE_SEPARATOR = System.lineSeparator();
     private static final String TEST_MESSAGE = "Hello world!";
     private ByteArrayOutputStream arrayOutputStream;
-    private IOService ioService;
 
     @MockBean
-    MessageSource messageSource;
+    private MessageSource messageSource;
     @Autowired
-    IOProvider ioProvider;
+    private AppConfig appConfig;
+    @Autowired
+    private IOService ioService;
 
     @BeforeEach
     void prepare() {
         this.arrayOutputStream = new ByteArrayOutputStream();
-        ioProvider.setPrintStream(new PrintStream(arrayOutputStream)); // пришлось добавлять метод в класс и интерфейс, плохо
-        ioService = new IOService(ioProvider, messageSource);
+        ReflectionTestUtils.setField(appConfig, "printStream", new PrintStream(arrayOutputStream));
     }
 
     @Test

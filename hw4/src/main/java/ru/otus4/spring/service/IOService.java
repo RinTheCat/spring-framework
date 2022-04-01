@@ -7,35 +7,29 @@ import ru.otus4.spring.config.IOProvider;
 import ru.otus4.spring.exception.IOServiceException;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.Locale;
 
 @Service
 public class IOService {
-    private final BufferedReader reader;
-    private final PrintStream writer;
+    private final IOProvider ioProvider;
     private final MessageSource messageSource;
-    private final Locale locale;
 
     @Autowired
     public IOService(IOProvider ioProvider, MessageSource messageSource) {
-        this.reader = new BufferedReader(new InputStreamReader(ioProvider.getInputStream(), StandardCharsets.UTF_8));
-        this.writer = ioProvider.getPrintStream();
+        this.ioProvider = ioProvider;
         this.messageSource = messageSource;
-        this.locale = ioProvider.getCurrentLocale(); // сомнительно ли сохранять состояние
     }
 
     public void showMessage(String message) {
-        writer.println(message);
+        ioProvider.getPrintStream().println(message);
     }
 
     public void showMessage(String messageName, String[] values) {
-        writer.println(messageSource.getMessage(messageName, values, locale));
+        ioProvider.getPrintStream().println(messageSource.getMessage(messageName, values, ioProvider.getCurrentLocale()));
     }
 
     public String getResponse() {
         try {
-            return reader.readLine();
+            return ioProvider.getBufferedReader().readLine();
         } catch (IOException exception) {
             throw new IOServiceException("Error during reading from console");
         }
