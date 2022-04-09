@@ -48,7 +48,7 @@ public class ConsoleIOService implements IOService {
             printStream.println("Введите id жанра");
             long genreId = Long.parseLong(bufferedReader.readLine());
 
-            return new Book(id, title, authorId, genreId);
+            return new Book(id, title, new Author(authorId, null), new Genre(genreId, null));
         } catch (IOException exception) {
             throw new IOServiceException("Error during reading from console");
         }

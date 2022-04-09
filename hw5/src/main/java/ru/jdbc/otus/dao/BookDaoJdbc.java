@@ -3,7 +3,9 @@ package ru.jdbc.otus.dao;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Service;
+import ru.jdbc.otus.domain.Author;
 import ru.jdbc.otus.domain.Book;
+import ru.jdbc.otus.domain.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,18 +30,23 @@ public class BookDaoJdbc implements BookDao {
     public void insert(Book book) {
         jdbc.update("INSERT INTO BOOKS(id, title, authorId, genreId) VALUES(:id, :title, :authorId, :genreId)",
                 Map.of("id", book.getId(), "title", book.getTitle(),
-                        "authorId", book.getAuthorId(), "genreId", book.getGenreId()));
+                        "authorId", book.getAuthor().getId(), "genreId", book.getGenre().getId()));
     }
 
     @Override
     public Book getById(long id) {
-        return jdbc.queryForObject("SELECT id, title, authorId, genreId FROM BOOKS WHERE id = :id",
+        return jdbc.queryForObject("SELECT * FROM BOOKS " +
+                        "INNER JOIN AUTHORS ON BOOKS.authorId= AUTHORS.id " +
+                        "INNER JOIN GENRES ON BOOKS.genreId = GENRES.id " +
+                        "WHERE BOOKS.id = :id ",
                 Map.of("id", id), new BookMapper());
     }
 
     @Override
     public List<Book> getAll() {
-        return jdbc.query("SELECT id, title, authorId, genreId FROM BOOKS", new BookMapper());
+        return jdbc.query("SELECT * FROM BOOKS " +
+                "INNER JOIN AUTHORS ON BOOKS.authorId= AUTHORS.id " +
+                "INNER JOIN GENRES ON BOOKS.genreId = GENRES.id", new BookMapper());
     }
 
     @Override
@@ -51,11 +58,13 @@ public class BookDaoJdbc implements BookDao {
 
         @Override
         public Book mapRow(ResultSet resultSet, int i) throws SQLException {
-            long id = resultSet.getLong("id");
-            String title = resultSet.getString("title");
-            long authorId = resultSet.getLong("authorId");
-            long genreId = resultSet.getLong("genreId");
-            return new Book(id, title, authorId, genreId);
+            long id = resultSet.getLong("BOOKS.id");
+            String title = resultSet.getString("BOOKS.title");
+            long authorId = resultSet.getLong("BOOKS.authorId");
+            long genreId = resultSet.getLong("BOOKS.genreId");
+            String authorName = resultSet.getString("AUTHORS.fullName");
+            String genreName = resultSet.getString("GENRES.name");
+            return new Book(id, title, new Author(authorId, authorName), new Genre(genreId, genreName));
         }
     }
 }

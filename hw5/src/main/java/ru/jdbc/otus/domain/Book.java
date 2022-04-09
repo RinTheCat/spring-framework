@@ -6,6 +6,6 @@ import lombok.Data;
 public class Book {
     private final long id;
     private final String title;
-    private final long authorId;
-    private final long genreId;
+    private final Author author;
+    private final Genre genre;
 }

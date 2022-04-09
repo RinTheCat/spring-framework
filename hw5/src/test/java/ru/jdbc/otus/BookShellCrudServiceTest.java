@@ -8,7 +8,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.shell.Shell;
 import ru.jdbc.otus.dao.*;
+import ru.jdbc.otus.domain.Author;
 import ru.jdbc.otus.domain.Book;
+import ru.jdbc.otus.domain.Genre;
 import ru.jdbc.otus.service.ConsoleIOService;
 import ru.jdbc.otus.service.ShellCrudService;
 
@@ -36,8 +38,8 @@ public class BookShellCrudServiceTest {
     private GenreDaoJdbc genreDaoJdbc;
 
     private static final int EXPECTED_BOOK_COUNT = 1;
-    private static final Book NEW_BOOK = new Book(2, "Чёрный кот", 1, 1);
-    private static final Book EXISTING_BOOK = new Book(1, "Убийство на улице Морг", 1, 1);
+    private static final Book NEW_BOOK = new Book(2, "Чёрный кот", new Author(1, "Эдгар Аллан По"), new Genre(1, "детектив"));
+    private static final Book EXISTING_BOOK = new Book(1, "Убийство на улице Морг", new Author(1, "Эдгар Аллан По"), new Genre(1, "детектив"));
 
     @Test
     @DisplayName("Должен посчитать кол-во книг")
