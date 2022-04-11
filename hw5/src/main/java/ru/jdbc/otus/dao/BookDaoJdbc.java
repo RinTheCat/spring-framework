@@ -22,7 +22,7 @@ public class BookDaoJdbc implements BookDao {
 
     @Override
     public int count() {
-        Integer amount = jdbc.getJdbcOperations().queryForObject("SELECT COUNT(*) FROM BOOKS", Integer.class);
+        Integer amount = jdbc.getJdbcOperations().queryForObject("SELECT COUNT(id) FROM BOOKS", Integer.class);
         return amount == null ? 0: amount;
     }
 
@@ -35,7 +35,7 @@ public class BookDaoJdbc implements BookDao {
 
     @Override
     public Book getById(long id) {
-        return jdbc.queryForObject("SELECT * FROM BOOKS " +
+        return jdbc.queryForObject("SELECT BOOKS.id, BOOKS.title, BOOKS.authorId, BOOKS.genreId, AUTHORS.fullName, GENRES.name FROM BOOKS " +
                         "INNER JOIN AUTHORS ON BOOKS.authorId= AUTHORS.id " +
                         "INNER JOIN GENRES ON BOOKS.genreId = GENRES.id " +
                         "WHERE BOOKS.id = :id ",
@@ -44,7 +44,7 @@ public class BookDaoJdbc implements BookDao {
 
     @Override
     public List<Book> getAll() {
-        return jdbc.query("SELECT * FROM BOOKS " +
+        return jdbc.query("SELECT BOOKS.id, BOOKS.title, BOOKS.authorId, BOOKS.genreId, AUTHORS.fullName, GENRES.name FROM BOOKS " +
                 "INNER JOIN AUTHORS ON BOOKS.authorId= AUTHORS.id " +
                 "INNER JOIN GENRES ON BOOKS.genreId = GENRES.id", new BookMapper());
     }
