@@ -10,6 +10,7 @@ import ru.otus.springdata.repository.CommentRepository;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CommentBusinessService {
@@ -28,22 +29,19 @@ public class CommentBusinessService {
     }
 
     @Transactional
-    public Comment insert(Comment comment) {
-        return commentRepository.save(comment);
-    }
-
-    @Transactional
     public void createNewComment(Comment newComment, long bookId) {
-        Book wantedBook = bookRepository.getById(bookId);
+        Optional<Book> wantedBook = bookRepository.findById(bookId);
 
-        if (wantedBook == null) throw new EntityNotFoundException();
+        if (wantedBook.isEmpty()) throw new EntityNotFoundException();
 
-        wantedBook.getComments().add(newComment);
-        newComment.setBook(wantedBook);
+        wantedBook.get().getComments().add(newComment);
+        newComment.setBook(wantedBook.get());
+
+        commentRepository.save(newComment);
     }
 
-    public Comment getById(long id) {
-        return commentRepository.getById(id);
+    public Optional<Comment> getById(long id) {
+        return commentRepository.findById(id);
     }
 
     @Transactional
@@ -57,7 +55,8 @@ public class CommentBusinessService {
 
     @Transactional
     public void updateTextById(long id, String text) {
-        Comment existingComment = commentRepository.getById(id);
-        existingComment.setText(text);
+        Optional<Comment> existingComment = commentRepository.findById(id);
+        if (existingComment.isEmpty()) throw new EntityNotFoundException();
+        existingComment.get().setText(text);
     }
 }

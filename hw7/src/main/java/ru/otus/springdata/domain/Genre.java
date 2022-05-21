@@ -1,6 +1,5 @@
 package ru.otus.springdata.domain;
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

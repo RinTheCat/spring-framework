@@ -3,10 +3,12 @@ package ru.otus.springdata.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import ru.otus.springdata.domain.Author;
 import ru.otus.springdata.domain.Book;
 import ru.otus.springdata.domain.Comment;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Optional;
 
 @ShellComponent
 public class ShellCrudService {
@@ -42,8 +44,8 @@ public class ShellCrudService {
                 }
 
             case ("getById"):
-                Book expectedBook = bookService.getById(ioService.getBookId());
-                if (expectedBook != null) {
+                Optional<Book> expectedBook = bookService.getById(ioService.getBookId());
+                if (expectedBook.isPresent()) {
                     return  expectedBook.toString();
                 } else return "Книги не существует!";
 
@@ -75,9 +77,12 @@ public class ShellCrudService {
         switch (operation) {
             case ("getAll"):
                 return authorService.getAll().toString();
-//
-//            case ("getById"):
-//                return authorService.getById(ioService.getAuthorId()).toString();
+
+            case ("getById"):
+                Optional<Author> expectedAuthor = authorService.getById(ioService.getAuthorId());
+                if (expectedAuthor.isPresent()) {
+                    return  expectedAuthor.get().toString();
+                } else return "Автора не существует!";
 
             case ("deleteById"):
                 authorService.deleteById(ioService.getAuthorId());
@@ -141,9 +146,9 @@ public class ShellCrudService {
                 }
 
             case ("getById"):
-                Comment expectedComment = commentService.getById(ioService.getCommentId());
-                if (expectedComment != null) {
-                    return  expectedComment.toString();
+                Optional<Comment> expectedComment = commentService.getById(ioService.getCommentId());
+                if (expectedComment.isPresent()) {
+                    return  expectedComment.get().toString();
                 } else return "Комментария не существует!";
 
             case ("updateTextById"):

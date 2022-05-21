@@ -12,6 +12,7 @@ import ru.otus.springdata.repository.GenreRepository;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookBusinessService {
@@ -32,27 +33,23 @@ public class BookBusinessService {
     }
 
     @Transactional
-    public Book insert(Book book) {
-        return bookRepository.save(book);
-    }
-
-    @Transactional
     public void createNewBook(Book newBook, long authorId, long genreId) {
-        Author wantedAuthor = authorRepository.getById(authorId);
-        Genre wantedGenre = genreRepository.getById(genreId);
+        Optional<Author> wantedAuthor = authorRepository.findById(authorId);
+        Optional<Genre> wantedGenre = genreRepository.findById(genreId);
 
-        if (wantedAuthor == null) throw new EntityNotFoundException();
-        if (wantedGenre == null) throw new EntityNotFoundException();
+        if (wantedAuthor.isEmpty()) throw new EntityNotFoundException();
+        if (wantedGenre.isEmpty()) throw new EntityNotFoundException();
 
-        wantedAuthor.getBooks().add(newBook);
-        wantedGenre.getBooks().add(newBook);
+        wantedAuthor.get().getBooks().add(newBook);
+        wantedGenre.get().getBooks().add(newBook);
 
-        newBook.setAuthor(wantedAuthor);
-        newBook.setGenre(wantedGenre);
+        newBook.setAuthor(wantedAuthor.get());
+        newBook.setGenre(wantedGenre.get());
+        bookRepository.save(newBook);
     }
 
-    public Book getById(long id) {
-        return bookRepository.getById(id);
+    public Optional<Book> getById(long id) {
+        return bookRepository.findById(id);
     }
 
     @Transactional
@@ -70,7 +67,8 @@ public class BookBusinessService {
 
     @Transactional
     public void updateTitleById(long id, String title) {
-        Book existingBook = bookRepository.getById(id);
-        existingBook.setTitle(title);
+        Optional<Book> existingBook = bookRepository.findById(id);
+        if (existingBook.isEmpty()) throw new EntityNotFoundException();
+        existingBook.get().setTitle(title);
     }
 }
