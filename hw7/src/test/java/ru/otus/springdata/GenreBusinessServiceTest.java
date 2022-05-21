@@ -13,6 +13,7 @@ import ru.otus.springdata.service.GenreBusinessService;
 import ru.otus.springdata.service.ShellCrudService;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -45,25 +46,27 @@ class GenreBusinessServiceTest {
     @Test
     void shouldInsertGenre() {
         genreBusinessService.insert(NEW_GENRE);
-        Genre actualGenre = genreBusinessService.getById(NEW_GENRE.getId());
-        assertThat(actualGenre.getName()).isEqualTo(NEW_GENRE.getName());
+        Optional<Genre> actualGenre = genreBusinessService.getById(NEW_GENRE.getId());
+        assertThat(actualGenre.get().getName()).isEqualTo(NEW_GENRE.getName());
     }
 
     @DisplayName("Найти жанр по id")
     @Test
     void shouldReturnExpectedGenreById() {
-        Genre actualGenre = genreBusinessService.getById(EXISTING_GENRE.getId());
-        assertThat(actualGenre.getName()).isEqualTo(EXISTING_GENRE.getName());
+        Optional<Genre> actualGenre = genreBusinessService.getById(EXISTING_GENRE.getId());
+        assertThat(actualGenre.get().getName()).isEqualTo(EXISTING_GENRE.getName());
     }
 
     @DisplayName("Удалить жанр по id")
     @Test
     void shouldCorrectDeleteGenreById() {
-        assertThat(genreBusinessService.getById(EXISTING_GENRE.getId()).getName()).isEqualTo(EXISTING_GENRE.getName());
+        Genre dbGenre = genreBusinessService.getById(EXISTING_GENRE.getId()).get();
+        assertThat(dbGenre.getName()).isEqualTo(EXISTING_GENRE.getName());
+
+        em.detach(dbGenre);
 
         genreBusinessService.deleteById(EXISTING_GENRE.getId());
-
-        assertThat(genreBusinessService.getById(EXISTING_GENRE.getId())).isEqualTo(null);
+        assertThat(genreBusinessService.getById(EXISTING_GENRE.getId())).isEqualTo(Optional.empty());
     }
 
     @DisplayName("Вернуть список жанров")

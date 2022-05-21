@@ -6,7 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.otus.springdata.domain.Author;
 import ru.otus.springdata.repository.AuthorRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AuthorBusinessService {
@@ -22,13 +24,12 @@ public class AuthorBusinessService {
         return authorRepository.count();
     }
 
-    @Transactional
     public Author insert(Author author) {
         return authorRepository.save(author);
     }
 
-    public Author getById(long id) {
-        return authorRepository.getById(id);
+    public Optional<Author> getById(long id) {
+        return authorRepository.findById(id);
     }
 
     @Transactional
@@ -46,7 +47,8 @@ public class AuthorBusinessService {
 
     @Transactional
     public void updateNameById(long id, String fullName) {
-        Author existingAuthor = authorRepository.getById(id);
-        existingAuthor.setFullName(fullName);
+        Optional<Author> existingAuthor = authorRepository.findById(id);
+        if (existingAuthor.isEmpty()) throw new EntityNotFoundException();
+        existingAuthor.get().setFullName(fullName);
     }
 }

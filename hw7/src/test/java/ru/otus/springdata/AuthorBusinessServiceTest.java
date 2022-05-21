@@ -13,6 +13,7 @@ import ru.otus.springdata.service.ConsoleIOService;
 import ru.otus.springdata.service.ShellCrudService;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -45,26 +46,28 @@ class AuthorBusinessServiceTest {
     @Test
     void shouldInsertAuthor() {
         authorBusinessService.insert(NEW_AUTHOR);
-        Author actualAuthor = authorBusinessService.getById(NEW_AUTHOR.getId());
-        assertThat(actualAuthor).usingRecursiveComparison().isEqualTo(NEW_AUTHOR);
+        Optional<Author> actualAuthor = authorBusinessService.getById(NEW_AUTHOR.getId());
+        assertThat(actualAuthor.get()).usingRecursiveComparison().isEqualTo(NEW_AUTHOR);
     }
 
     @DisplayName("Найти автора по id")
     @Test
     void shouldReturnExpectedAuthorById() {
-        Author actualAuthor = authorBusinessService.getById(EXISTING_AUTHOR.getId());
-        assertThat(actualAuthor.getFullName()).isEqualTo(EXISTING_AUTHOR.getFullName());
+        Optional<Author> actualAuthor = authorBusinessService.getById(EXISTING_AUTHOR.getId());
+        assertThat(actualAuthor.get().getFullName()).isEqualTo(EXISTING_AUTHOR.getFullName());
     }
 
     @DisplayName("Удалить автора по id")
     @Test
     void shouldCorrectlyDeleteAuthorById() {
-        assertThat(authorBusinessService.getById(EXISTING_AUTHOR.getId()).getFullName())
+        Author dbAuthor = authorBusinessService.getById(EXISTING_AUTHOR.getId()).get();
+        assertThat(dbAuthor.getFullName())
                 .isEqualTo(EXISTING_AUTHOR.getFullName());
 
-        authorBusinessService.deleteById(EXISTING_AUTHOR.getId());
+        em.detach(dbAuthor);
 
-        assertThat(authorBusinessService.getById(EXISTING_AUTHOR.getId())).isEqualTo(null);
+        authorBusinessService.deleteById(EXISTING_AUTHOR.getId());
+        assertThat(authorBusinessService.getById(EXISTING_AUTHOR.getId())).isEqualTo(Optional.empty());
     }
 
     @DisplayName("Вернуть список авторов")

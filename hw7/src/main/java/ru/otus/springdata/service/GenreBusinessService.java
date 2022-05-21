@@ -6,7 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.otus.springdata.domain.Genre;
 import ru.otus.springdata.repository.GenreRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GenreBusinessService {
@@ -22,13 +24,12 @@ public class GenreBusinessService {
         return genreRepository.count();
     }
 
-    @Transactional
     public Genre insert(Genre genre) {
         return genreRepository.save(genre);
     }
 
-    public Genre getById(long id) {
-        return genreRepository.getById(id);
+    public Optional<Genre> getById(long id) {
+        return genreRepository.findById(id);
     }
 
     @Transactional
@@ -46,7 +47,8 @@ public class GenreBusinessService {
 
     @Transactional
     public void updateNameById(long id, String name) {
-        Genre existingGenre = genreRepository.getById(id);
-        existingGenre.setName(name);
+        Optional<Genre> existingGenre = genreRepository.findById(id);
+        if (existingGenre.isEmpty()) throw new EntityNotFoundException();
+        existingGenre.get().setName(name);
     }
 }
