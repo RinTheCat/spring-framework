@@ -1,0 +1,17 @@
+spring:
+  main:
+    allow-circular-references: true
+  shell:
+    interactive:
+      enabled: false
+  data:
+    mongodb:
+      database: library
+  mongodb:
+    embedded:
+      version: 3.5.5
+
+mongock:
+  runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.otus.nosql.testmongock.changelog
