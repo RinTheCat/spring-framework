@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Library</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+            font-family: sans-serif;
+        }
+
+        h4 {
+            padding: 50px;
+        }
+
+        td {
+            padding: 10px;
+        }
+
+        table {
+            border: 1px solid darkred;
+            width: auto;
+            border-collapse: collapse;
+        }
+
+        table tr td {
+            border: 1px solid darkred;
+        }
+
+        .header-block {
+            width: 500px;
+        }
+    </style>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+<table class="header-block">
+    <thead>
+    <tr>
+        <td>
+            <button id="getBooks">Все книги</button>
+        </td>
+        <td>
+            <button id="getAuthors">Все авторы</button>
+        </td>
+        <td>
+            <button id="getGenres">Все жанры</button>
+        </td>
+    </tr>
+    </thead>
+</table>
+
+<div>
+    <table id="book_table"></table>
+</div>
+<div>
+    <table id="author_table"></table>
+</div>
+<div>
+    <table id="genre_table"></table>
+</div>
+
+<script>
+    $('#getAuthors').click(function () {
+        $('#book_table').empty();
+        $('#genre_table').empty();
+        $('#author_table').empty().append(`
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Full name</th>
+            </tr>
+            </thead>
+            <tbody id="authors"></tbody>
+        `);
+        $.get('/api/author').done(function (authors) {
+            authors.forEach(function (author) {
+                $('#authors').append(`
+                    <tr>
+                        <td>${author.id}</td>
+                        <td>${author.fullName}</td>
+                    </tr>
+                `)
+            });
+        });
+    });
+</script>
+
+<script>
+    $('#getGenres').click(function () {
+        $('#book_table').empty();
+        $('#author_table').empty();
+        $('#genre_table').empty().append(`
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+            </tr>
+            </thead>
+            <tbody id="genres"></tbody>
+        `);
+        $.get('/api/genre').done(function (genres) {
+            genres.forEach(function (genre) {
+                $('#genres').append(`
+                    <tr>
+                        <td>${genre.id}</td>
+                        <td>${genre.name}</td>
+                    </tr>
+                `)
+            });
+        });
+    });
+</script>
+<script>
+    $('#getBooks').click(function () {
+        $('#author_table').empty();
+        $('#genre_table').empty();
+        $('#book_table').empty().append(`
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Genre</th>
+                    <th>Comments</th>
+                </tr>
+            </thead>
+            <tbody id="books"></tbody>
+        `);
+        $.get('/api/book').done(function (books) {
+            var html = '';
+            books.forEach(function (book) {
+                var chtml = '';
+                book.comments.forEach(function (comment) {
+                    chtml += `
+                        <li>
+                            <span>${comment}</span>
+                        </li>
+                    `;
+                });
+                html += `
+                    <tr>
+                        <td id="#bookId">${book.id}</td>
+                        <td>${book.title}</td>
+                        <td>${book.author.fullName}</td>
+                        <td>${book.genre.name}</td>
+                        <td>
+                            <ul id="comments">${chtml}</ul>
+                        </td>
+                    </tr>
+                `;
+            });
+            $('#books').append(html);
+        });
+    });
+</script>
+</body>
+</html>
