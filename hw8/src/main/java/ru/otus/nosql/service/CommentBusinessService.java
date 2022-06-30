@@ -35,8 +35,10 @@ public class CommentBusinessService {
         if (wantedBook.isEmpty()) throw new NotFoundException(String.format("The book with id=%s was not found", bookId));
 
         newComment.setBook(wantedBook.get());
+        wantedBook.get().getComments().add(newComment);
 
         commentRepository.save(newComment);
+        bookRepository.save(wantedBook.get());
     }
 
     public Optional<Comment> getById(String id) {
@@ -56,8 +58,17 @@ public class CommentBusinessService {
     public void updateTextById(String id, String text) {
         Optional<Comment> existingComment = commentRepository.findById(id);
         if (existingComment.isEmpty()) throw new NotFoundException(String.format("The comment with id=%s was not found", id));
+        Book book = bookRepository.findById(existingComment.get().getBook().getId()).get();
+        List<Comment> comments = book.getComments();
+        for (Comment comment : comments) {
+            if (comment.getId().equals(id)) {
+                comment.setText(text);
+                break;
+            }
+        }
         existingComment.get().setText(text);
         commentRepository.save(existingComment.get());
+        bookRepository.save(book);
     }
 
     public List<Comment> getByBookId(String bookId) {

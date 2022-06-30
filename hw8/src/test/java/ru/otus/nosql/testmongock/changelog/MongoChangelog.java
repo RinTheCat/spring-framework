@@ -7,7 +7,10 @@ import com.github.cloudyrock.mongock.ChangeSet;
 import com.mongodb.DBRef;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.model.Updates;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +50,8 @@ public class MongoChangelog {
         newBooks.add(new Document().append("_id", "1")
                 .append("title", "Убийство на улице Морг")
                 .append("author", new DBRef("authors", authors.find(eq("fullName", "Эдгар Аллан По")).first().get("_id")))
-                .append("genre", new DBRef("genres", genres.find(eq("name", "детектив")).first().get("_id"))));
+                .append("genre", new DBRef("genres", genres.find(eq("name", "детектив")).first().get("_id")))
+                .append("comments", new ArrayList<>()));
         books.insertMany(newBooks);
     }
 
@@ -60,6 +64,15 @@ public class MongoChangelog {
                 .append("text", "страшный")
                 .append("book", new DBRef("books", books.find(eq("title", "Убийство на улице Морг")).first().get("_id"))));
         comments.insertMany(newComments);
+    }
+
+    @ChangeSet(order = "006", id = "insertBookComments", author = "rina")
+    public void insertBookComments(MongoDatabase db) {
+        MongoCollection<Document> comments = db.getCollection("comments");
+        MongoCollection<Document> books = db.getCollection("books");
+
+        Bson updates = Updates.addToSet("comments", comments.find(eq("text", "страшный")).first());
+        books.updateOne(books.find(eq("title", "Убийство на улице Морг")).first(), updates, new UpdateOptions().upsert(true));
     }
 }
 

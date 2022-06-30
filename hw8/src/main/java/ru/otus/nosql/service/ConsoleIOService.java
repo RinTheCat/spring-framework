@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 @Service
 public class ConsoleIOService implements IOService {
@@ -72,7 +73,7 @@ public class ConsoleIOService implements IOService {
         try {
             printStream.println("Введите название книги");
             String title = bufferedReader.readLine();
-            return new Book(null, title, null, null);
+            return new Book(null, title, null, null, new ArrayList<>());
         } catch (IOException exception) {
             throw new IOServiceException("Error during reading from console");
         }
