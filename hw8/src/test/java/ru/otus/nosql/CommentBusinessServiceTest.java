@@ -15,6 +15,7 @@ import ru.otus.nosql.service.CommentBusinessService;
 import ru.otus.nosql.service.ConsoleIOService;
 import ru.otus.nosql.service.ShellCrudService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +40,7 @@ class CommentBusinessServiceTest {
     BookRepository bookRepository;
 
     private static final int EXPECTED_COMMENT_COUNT = 1;
-    private static final Book EXISTING_BOOK = new Book("1", "Убийство на улице Морг", null, null);
+    private static final Book EXISTING_BOOK = new Book("1", "Убийство на улице Морг", null, null, new ArrayList<>());
     private static final Comment NEW_COMMENT = new Comment("2", "прикольно", EXISTING_BOOK);
     private static final Comment EXISTING_COMMENT = new Comment("1", "страшный", EXISTING_BOOK);
 

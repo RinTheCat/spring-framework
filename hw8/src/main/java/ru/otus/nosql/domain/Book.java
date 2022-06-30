@@ -5,6 +5,9 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Document(collection = "books")
 public class Book {
     @Id
@@ -17,15 +20,18 @@ public class Book {
     @DBRef
     @Field(name = "genre")
     private Genre genre;
+    @Field(name = "comments")
+    private List<Comment> comments;
 
     public Book() {
     }
 
-    public Book(String id, String title, Author author, Genre genre) {
+    public Book(String id, String title, Author author, Genre genre, List<Comment> comments) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.genre = genre;
+        this.comments = comments;
     }
 
     @Override
@@ -35,6 +41,7 @@ public class Book {
                 ", title='" + title + '\'' +
                 ", author=" + author.getFullName() +
                 ", genre=" + genre.getName() +
+                ", comments=" + this.comments.stream().map(Comment::getText).collect(Collectors.toList()) +
                 '}';
     }
 
@@ -68,5 +75,13 @@ public class Book {
 
     public void setGenre(Genre genre) {
         this.genre = genre;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }

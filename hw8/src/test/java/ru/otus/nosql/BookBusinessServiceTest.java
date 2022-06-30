@@ -17,6 +17,7 @@ import ru.otus.nosql.service.BookBusinessService;
 import ru.otus.nosql.service.ConsoleIOService;
 import ru.otus.nosql.service.ShellCrudService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,8 +46,8 @@ class BookBusinessServiceTest {
     private static final int EXPECTED_BOOK_COUNT = 1;
     private static final Author EXISTING_AUTHOR = new Author("1", "Эдгар Аллан По");
     private static final Genre EXISTING_GENRE = new Genre("1", "детектив");
-    private static final Book NEW_BOOK = new Book("2", "Чёрный кот", EXISTING_AUTHOR, EXISTING_GENRE);
-    private static final Book EXISTING_BOOK = new Book("1", "Убийство на улице Морг", EXISTING_AUTHOR, EXISTING_GENRE);
+    private static final Book NEW_BOOK = new Book("2", "Чёрный кот", EXISTING_AUTHOR, EXISTING_GENRE, new ArrayList<>());
+    private static final Book EXISTING_BOOK = new Book("1", "Убийство на улице Морг", EXISTING_AUTHOR, EXISTING_GENRE, new ArrayList<>());
 
     @DisplayName("Сосчитать кол-во книг в БД")
     @Test

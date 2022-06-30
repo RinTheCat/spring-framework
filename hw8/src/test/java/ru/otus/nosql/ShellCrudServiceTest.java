@@ -22,6 +22,8 @@ import ru.otus.nosql.service.ConsoleIOService;
 import ru.otus.nosql.service.GenreBusinessService;
 import ru.otus.nosql.service.ShellCrudService;
 
+import java.util.ArrayList;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
@@ -45,11 +47,11 @@ public class ShellCrudServiceTest {
     private CommentRepository commentRepository;
 
     private static final int EXPECTED_BOOK_COUNT = 1;
-    private static final Book NEW_BOOK = new Book("2", "Чёрный кот", null, null);
+    private static final Book NEW_BOOK = new Book("2", "Чёрный кот", null, null, new ArrayList<>());
     private static final Author NOT_EXISTING_AUTHOR = new Author("34", "Тест Тест");
     private static final Genre NOT_EXISTING_GENRE = new Genre("77", "тест");
-    private static final Book NOT_EXISTING_BOOK = new Book("88", "НИСЫ", null, null);
-    private static final Book EXISTING_BOOK = new Book("1", "Убийство на улице Морг", null, null);
+    private static final Book NOT_EXISTING_BOOK = new Book("88", "НИСЫ", null, null, new ArrayList<>());
+    private static final Book EXISTING_BOOK = new Book("1", "Убийство на улице Морг", null, null, new ArrayList<>());
     private static final Comment EXISTING_COMMENT = new Comment("1", "страшный", null);
     private static final Comment NEW_COMMENT = new Comment("2", "круто", null);
 
