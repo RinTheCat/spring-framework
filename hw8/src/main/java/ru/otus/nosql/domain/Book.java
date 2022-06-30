@@ -1,6 +1,7 @@
 package ru.otus.nosql.domain;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -10,8 +11,10 @@ public class Book {
     private String id;
     @Field(name = "title")
     private String title;
+    @DBRef
     @Field(name = "author")
     private Author author;
+    @DBRef
     @Field(name = "genre")
     private Genre genre;
 

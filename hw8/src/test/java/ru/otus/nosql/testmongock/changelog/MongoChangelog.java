@@ -4,6 +4,7 @@ import static com.mongodb.client.model.Filters.eq;
 
 import com.github.cloudyrock.mongock.ChangeLog;
 import com.github.cloudyrock.mongock.ChangeSet;
+import com.mongodb.DBRef;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
@@ -45,8 +46,8 @@ public class MongoChangelog {
         List<Document> newBooks = new ArrayList<>();
         newBooks.add(new Document().append("_id", "1")
                 .append("title", "Убийство на улице Морг")
-                .append("author", authors.find(eq("fullName", "Эдгар Аллан По")).first())
-                .append("genre", genres.find(eq("name", "детектив")).first()));
+                .append("author", new DBRef("authors", authors.find(eq("fullName", "Эдгар Аллан По")).first().get("_id")))
+                .append("genre", new DBRef("genres", genres.find(eq("name", "детектив")).first().get("_id"))));
         books.insertMany(newBooks);
     }
 
@@ -57,7 +58,7 @@ public class MongoChangelog {
         List<Document> newComments = new ArrayList<>();
         newComments.add(new Document().append("_id", "1")
                 .append("text", "страшный")
-                .append("book", books.find(eq("title", "Убийство на улице Морг")).first()));
+                .append("book", new DBRef("books", books.find(eq("title", "Убийство на улице Морг")).first().get("_id"))));
         comments.insertMany(newComments);
     }
 }

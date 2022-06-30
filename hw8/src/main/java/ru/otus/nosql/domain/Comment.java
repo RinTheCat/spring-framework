@@ -1,6 +1,7 @@
 package ru.otus.nosql.domain;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -10,6 +11,7 @@ public class Comment {
     private String id;
     @Field(name = "text")
     private String text;
+    @DBRef
     @Field(name = "book")
     private Book book;
 
