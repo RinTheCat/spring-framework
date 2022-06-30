@@ -4,6 +4,7 @@ import static com.mongodb.client.model.Filters.eq;
 
 import com.github.cloudyrock.mongock.ChangeLog;
 import com.github.cloudyrock.mongock.ChangeSet;
+import com.mongodb.DBRef;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
@@ -51,29 +52,29 @@ public class MongoChangelog {
         MongoCollection<Document> books = db.getCollection("books");
         List<Document> newBooks = new ArrayList<>();
         newBooks.add(new Document().append("title", "Унесённые ветром")
-                                   .append("author", authors.find(eq("fullName", "Маргарет Митчелл")).first())
-                                   .append("genre", genres.find(eq("name", "роман-эпопея")).first()));
+                                   .append("author", new DBRef("authors", authors.find(eq("fullName", "Маргарет Митчелл")).first().get("_id")))
+                                   .append("genre", new DBRef("genres", genres.find(eq("name", "роман-эпопея")).first().get("_id"))));
         newBooks.add(new Document().append("title", "Война и мир")
-                                   .append("author", authors.find(eq("fullName", "Лев Толстой")).first())
-                                   .append("genre", genres.find(eq("name", "роман-эпопея")).first()));
+                                   .append("author", new DBRef("authors", authors.find(eq("fullName", "Лев Толстой")).first().get("_id")))
+                                   .append("genre", new DBRef("genres", genres.find(eq("name", "роман-эпопея")).first().get("_id"))));
         newBooks.add(new Document().append("title", "Шерлок Холмс")
-                                   .append("author", authors.find(eq("fullName", "Артур Конан Дойл")).first())
-                                   .append("genre", genres.find(eq("name", "детектив")).first()));
+                                   .append("author", new DBRef("authors", authors.find(eq("fullName", "Артур Конан Дойл")).first().get("_id")))
+                                   .append("genre", new DBRef("genres", genres.find(eq("name", "детектив")).first().get("_id"))));
         newBooks.add(new Document().append("title", "Убийство на улице Морг")
-                                   .append("author", authors.find(eq("fullName", "Эдгар Аллан По")).first())
-                                   .append("genre", genres.find(eq("name", "детектив")).first()));
+                                   .append("author", new DBRef("authors", authors.find(eq("fullName", "Эдгар Аллан По")).first().get("_id")))
+                                   .append("genre", new DBRef("genres", genres.find(eq("name", "детектив")).first().get("_id"))));
         newBooks.add(new Document().append("title", "Превращение")
-                                   .append("author", authors.find(eq("fullName", "Франц Кафка")).first())
-                                   .append("genre", genres.find(eq("name", "психология")).first()));
+                                   .append("author", new DBRef("authors", authors.find(eq("fullName", "Франц Кафка")).first().get("_id")))
+                                   .append("genre", new DBRef("genres", genres.find(eq("name", "психология")).first().get("_id"))));
         newBooks.add(new Document().append("title", "Процесс")
-                                   .append("author", authors.find(eq("fullName", "Франц Кафка")).first())
-                                   .append("genre", genres.find(eq("name", "антиутопия")).first()));
+                                   .append("author", new DBRef("authors", authors.find(eq("fullName", "Франц Кафка")).first().get("_id")))
+                                   .append("genre", new DBRef("genres", genres.find(eq("name", "антиутопия")).first().get("_id"))));
         newBooks.add(new Document().append("title", "1984")
-                                   .append("author", authors.find(eq("fullName", "Джордж Оруэлл")).first())
-                                   .append("genre", genres.find(eq("name", "антиутопия")).first()));
+                                   .append("author", new DBRef("authors", authors.find(eq("fullName", "Джордж Оруэлл")).first().get("_id")))
+                                   .append("genre", new DBRef("genres", genres.find(eq("name", "антиутопия")).first().get("_id"))));
         newBooks.add(new Document().append("title", "Преступление и наказание")
-                                   .append("author", authors.find(eq("fullName", "Фёдор Достоевский")).first())
-                                   .append("genre", genres.find(eq("name", "психология")).first()));
+                                   .append("author", new DBRef("authors", authors.find(eq("fullName", "Фёдор Достоевский")).first().get("_id")))
+                                   .append("genre", new DBRef("genres", genres.find(eq("name", "психология")).first().get("_id"))));
         books.insertMany(newBooks);
     }
 
@@ -83,15 +84,15 @@ public class MongoChangelog {
         MongoCollection<Document> books = db.getCollection("books");
         List<Document> newComments = new ArrayList<>();
         newComments.add(new Document().append("text", "сериал понравился больше")
-                .append("book", books.find(eq("title", "Шерлок Холмс")).first()));
+                .append("book", new DBRef("books", books.find(eq("title", "Шерлок Холмс")).first().get("_id"))));
         newComments.add(new Document().append("text", "страшный")
-                .append("book", books.find(eq("title", "Убийство на улице Морг")).first()));
+                .append("book", new DBRef("books", books.find(eq("title", "Убийство на улице Морг")).first().get("_id"))));
         newComments.add(new Document().append("text", "так себе")
-                .append("book", books.find(eq("title", "Процесс")).first()));
+                .append("book", new DBRef("books", books.find(eq("title", "Процесс")).first().get("_id"))));
         newComments.add(new Document().append("text", "ничего не понял")
-                .append("book", books.find(eq("title", "Процесс")).first()));
+                .append("book", new DBRef("books", books.find(eq("title", "Процесс")).first().get("_id"))));
         newComments.add(new Document().append("text", "не очень")
-                .append("book", books.find(eq("title", "1984")).first()));
+                .append("book", new DBRef("books", books.find(eq("title", "1984")).first().get("_id"))));
         comments.insertMany(newComments);
     }
 }
