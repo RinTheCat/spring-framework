@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>All books</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+            font-family: sans-serif;
+        }
+
+        h4 {
+            padding: 50px;
+        }
+
+        td {
+            padding: 10px;
+        }
+
+        .table {
+            border: 1px solid darkred;
+            width: 80%;
+            border-collapse: collapse;
+        }
+
+        .table tr td {
+            border: 1px solid darkred;
+        }
+
+        .header-block {
+            width: 500px;
+        }
+    </style>
+</head>
+<body>
+<table class="header-block">
+    <thead>
+        <tr>
+            <td>
+                <a href="allBooks.html" th:href="@{/books}">Все книги</a>
+            </td>
+            <td>
+                <a href="allAuthors.html" th:href="@{/authors}">Все авторы</a>
+            </td>
+            <td>
+                <a href="allGenres.html" th:href="@{/genres}">Все жанры</a>
+            </td>
+        </tr>
+    </thead>
+</table>
+<h4>Книг в БД: <span th:text="${number}">1</span></h4>
+<table class="table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Genre</th>
+        <th>Comments</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}">
+        <td th:text="${book.id}">1</td>
+        <td th:text="${book.title}">Колобок</td>
+        <td th:text="${book.author.fullName}">-</td>
+        <td th:text="${book.genre.name}">Сказка</td>
+        <td>
+            <ul>
+                <li th:each="comment : ${book.comments}">
+                    <span th:text="${comment.text}"></span>
+                </li>
+            </ul>
+        </td>
+        <td>
+            <a href="editBook.html" th:href="@{/books/edit/{id}(id = ${book.id})}">Edit</a>
+        </td>
+        <td>
+            <a href="allBooks.html" th:href="@{/books/delete/{id}(id = ${book.id})}">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<a href="createBook.html" th:href="@{/books/create}">Create new</a>
+</body>
+</html>
