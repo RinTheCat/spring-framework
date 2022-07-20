@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>All genres</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+            font-family: sans-serif;
+        }
+
+        h4 {
+            padding: 50px;
+        }
+
+        td {
+            padding: 10px;
+        }
+
+        .table {
+            border: 1px solid darkred;
+            width: 50%;
+            border-collapse: collapse;
+        }
+
+        .table tr td {
+            border: 1px solid darkred;
+        }
+
+        .header-block {
+            width: 500px;
+        }
+    </style>
+</head>
+<body>
+<table class="header-block">
+    <thead>
+    <tr>
+        <td>
+            <a href="allBooks.html" th:href="@{/books}">Все книги</a>
+        </td>
+        <td>
+            <a href="allAuthors.html" th:href="@{/authors}">Все авторы</a>
+        </td>
+        <td>
+            <a href="allGenres.html" th:href="@{/genres}">Все жанры</a>
+        </td>
+    </tr>
+    </thead>
+</table>
+<h4>Жанров в БД: <span th:text="${number}">1</span></h4>
+<table class="table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="genre : ${genres}">
+        <td th:text="${genre.id}">1</td>
+        <td th:text="${genre.name}">детектив</td>
+        <td>
+            <a href="allGenres.html" th:href="@{/genres/delete/{id}(id = ${genre.id})}">Delete</a>
+        </td>
+    </tr>
+    <tr>
+        <td>new</td>
+        <td>
+            <form action="allGenres.html" th:method="post" th:action="@{/genres/create}" >
+                <input name="name" type="text"/>
+                <button type="submit">Save</button>
+            </form>
+        </td>
+        <td>-</td>
+    </tr>
+    </tbody>
+</table>
+<!--<a href="createBook.html" th:href="@{/genres/create}">Create new</a>-->
+</body>
+</html>
