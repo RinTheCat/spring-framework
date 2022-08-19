@@ -2,6 +2,8 @@ package ru.otus.project.domain;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,17 +20,16 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "status_id")
+    @Enumerated(EnumType.ORDINAL)
     private Status status;
 
-    public void previousStatus() {
-        status.prev(this);
-    }
-
-    public void nextStatus() {
-        status.next(this);
-    }
+//    public void previousStatus() {
+//        status.prev(this);
+//    }
+//
+//    public void nextStatus() {
+//        status.next(this);
+//    }
 
     public long getId() {
         return id;
@@ -46,11 +47,11 @@ public class Order {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return "Order{" +
-                "id=" + id +
-                ", status=" + status.getName() +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Order{" +
+//                "id=" + id +
+//                ", status=" + status.getName() +
+//                '}';
+//    }
 }
